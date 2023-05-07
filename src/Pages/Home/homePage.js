@@ -52,7 +52,7 @@ const HomePage = () => {
           <h2>Favorites</h2>
         </Grid>
         {booksData.map((book) => (
-          <Grid item xs={12} md={2}>
+          <Grid key={book.ISBN} item xs={12} md={2}>
             <Card className="favoritesSection" sx={{ maxWidth: 345 }}>
               <CardMedia
                 sx={{ height: 140 }}

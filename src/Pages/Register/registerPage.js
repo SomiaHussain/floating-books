@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Button, TextField, Grid, Container } from "@mui/material";
 import "./registerPage.css";
 import { Register } from "../../services/accountService";
+import { useNavigate } from "react-router-dom";
 
 
 const RegistrationPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    postalAddress: "",
     userName: "",
-    postalAddress: ""
+    password: ""
   });
 
   const handleChange = (event) => {
@@ -23,7 +26,10 @@ const RegistrationPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     //Need to add validation
+    console.log(formData)
     Register(formData)
+    navigate("/login")
+
   };
 
   return (
@@ -56,6 +62,14 @@ const RegistrationPage = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              name="postalAddress"
+              value={formData.postalAddress}
+              onChange={handleChange}
+              label="postalAddress"
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
               name="userName"
               value={formData.userName}
               onChange={handleChange}
@@ -64,10 +78,11 @@ const RegistrationPage = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="postalAddress"
-              value={formData.postalAddress}
+              name="password"
+              type="password"
+              value={formData.password}
               onChange={handleChange}
-              label="postalAddress"
+              label="Password"
             ></TextField>
           </Grid>
         </Grid>
