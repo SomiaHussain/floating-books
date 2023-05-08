@@ -7,7 +7,7 @@ import "./loginPage.css";
 const LoginPage = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
-    userName: "",
+    email: "",
     password: ""
   });
   const [errorMessage, setErrorMessage] = useState("");
@@ -22,16 +22,15 @@ const LoginPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    Login(loginData)
-      .then((response) => {
-        localStorage.setItem("userDetails", JSON.stringify(response));
-        setErrorMessage("");
-        navigate("/");
-        window.location.reload(true);
-      })
-      .catch((errorMessage) => {
-        setErrorMessage("Authentication failed");
-      });
+    try {
+      const userData = await Login(loginData);
+      localStorage.setItem("userDetails", JSON.stringify(userData.user));
+      setErrorMessage("");
+      navigate("/");
+      window.location.reload(true);
+    } catch (error) {
+      setErrorMessage("Authentication failed");
+    }
   };
 
   return (
@@ -47,10 +46,11 @@ const LoginPage = () => {
           <h2>Login</h2>
           <Grid item xs={12}>
             <TextField
-              name="userName"
-              value={loginData.userName}
+              name="email"
+              type="email"
+              value={loginData.email}
               onChange={handleChange}
-              label="user Name"
+              label="email"
             ></TextField>
           </Grid>
           <Grid item xs={12}>

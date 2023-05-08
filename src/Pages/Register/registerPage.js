@@ -4,16 +4,14 @@ import "./registerPage.css";
 import { Register } from "../../services/accountService";
 import { useNavigate } from "react-router-dom";
 
-
 const RegistrationPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    postalAddress: "",
-    userName: "",
-    password: ""
+    email: "",
+    password: "",
+    confirmPassword: ""
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,13 +21,20 @@ const RegistrationPage = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    //Need to add validation
-    console.log(formData)
-    Register(formData)
-    navigate("/login")
 
+    if (formData.password === formData.confirmPassword) {
+      setErrorMessage("");
+
+      Register(formData)
+        .then(() => navigate("/login"))
+        .catch((error) => {
+          setErrorMessage(error.message.replace("Firebase: ", ""));
+        });
+    } else {
+      setErrorMessage("Passwords must match");
+    }
   };
 
   return (
@@ -46,34 +51,11 @@ const RegistrationPage = () => {
 
           <Grid item xs={12}>
             <TextField
-              name="firstName"
-              value={formData.firstName}
+              name="email"
+              type="email"
+              value={formData.email}
               onChange={handleChange}
-              label="First Name"
-            ></TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              label="last Name"
-            ></TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="postalAddress"
-              value={formData.postalAddress}
-              onChange={handleChange}
-              label="postalAddress"
-            ></TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="userName"
-              value={formData.userName}
-              onChange={handleChange}
-              label="user Name"
+              label="Email"
             ></TextField>
           </Grid>
           <Grid item xs={12}>
@@ -85,6 +67,18 @@ const RegistrationPage = () => {
               label="Password"
             ></TextField>
           </Grid>
+          <Grid item xs={12}>
+            <TextField
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              label="confirm password"
+            ></TextField>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          {errorMessage && <p className="errorLabel">{errorMessage}</p>}
         </Grid>
         <Grid item xs={12}>
           <Button type="submit" fullWidth>

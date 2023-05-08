@@ -177,8 +177,8 @@ const NavBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <div className="username">
-                  <p>{userDetails?.userName}</p>
+                <div className="email">
+                  <p>{userDetails?.email}</p>
                 </div>
                 {settings.map((setting) => (
                   <MenuItem
