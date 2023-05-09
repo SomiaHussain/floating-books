@@ -61,6 +61,9 @@ const NavBar = () => {
       setUserDetails({});
       window.location.reload(true);
     }
+    if (setting) {
+      navigate("/" + setting);
+    }
     setAnchorElUser(null);
   };
 
