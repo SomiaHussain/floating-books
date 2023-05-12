@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import { getUser } from "../../services/usersService";
+import DonateBooks from "../Book/donateBooks";
+import FavouriteBooks from "../Book/favouriteBooks";
+import OrderBooks from "../Book/orderBooks";
 import "./profilePage.css";
 
 const ProfilePage = () => {
@@ -22,6 +25,7 @@ const ProfilePage = () => {
 
   return (
     <Container sx={{ paddingTop: "10px" }}>
+      User Profile
       <table>
         <tbody>
           {rows.map((e) => {
@@ -34,6 +38,9 @@ const ProfilePage = () => {
           })}
         </tbody>
       </table>
+      <DonateBooks userId={users.id} />
+      <FavouriteBooks userId={users.id} />
+      <OrderBooks userId={users.id} />
     </Container>
   );
 };
