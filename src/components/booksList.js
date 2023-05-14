@@ -34,8 +34,8 @@ const BookList = ({ book, handleFavourite, isFavourite }) => {
         <CardActions>
           <Button size="small">Share</Button>
           <Button size="small">Learn More</Button>
-          {isFavourite(book.id) ? (
-            <Box sx={{ paddingLeft: "30px" }}>
+          {isFavourite(book) ? (
+            <Box sx={{ paddingLeft: "90px" }}>
               <IconButton
                 onClick={(e) => {
                   e.target.value = "";
@@ -46,7 +46,7 @@ const BookList = ({ book, handleFavourite, isFavourite }) => {
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ paddingLeft: "30px" }}>
+            <Box sx={{ paddingLeft: "90px" }}>
               <IconButton
                 onClick={(e) => {
                   e.target.value = "";

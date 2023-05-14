@@ -26,7 +26,11 @@ const HomePage = () => {
       GetFavouriteBook(res.data.id).then((result) => {
         const uniqueBooksMap = new Map();
         result?.data.forEach((item) => {
-          const data = { ...item.book, favouritesId: item.id };
+          const data = {
+            ...item.book,
+            favouritesId: item.id,
+            favouritedById: item.userId,
+          };
           uniqueBooksMap.set(item.bookId, data);
         });
         setFavouriteBooks(Array.from(uniqueBooksMap.values()));
@@ -58,10 +62,11 @@ const HomePage = () => {
   };
   const handleFavourite = (book, favouriteId) => {
     const currentDate = new Date();
-    if (isFavourite(book.id)) {
-      const updatedItems = favouriteBooks.filter((i) => i !== book);
-      setFavouriteBooks(updatedItems);
-      DeleteFavouriteBook(favouriteId);
+    if (isFavourite(book)) {
+      DeleteFavouriteBook(favouriteId).then((res) => {
+        const updatedItems = favouriteBooks.filter((i) => i !== book);
+        setFavouriteBooks(updatedItems);
+      });
     } else {
       AddFavouriteBook(
         book.id,
@@ -93,16 +98,8 @@ const HomePage = () => {
     search(pastedValue);
   };
 
-  const isFavourite = (bookId) => {
-    if (
-      favouriteBooks?.some(
-        (obj) => obj.id === bookId && obj.ownerId === loggedUserDetails.id
-      )
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+  const isFavourite = (bookItem) => {
+    return favouriteBooks.some((obj) => obj.id === bookItem.id);
   };
 
   return (
@@ -181,7 +178,7 @@ const HomePage = () => {
             ?.slice(0, 6)
             .map(
               (book) =>
-                !isFavourite(book.id) && (
+                !isFavourite(book) && (
                   <BookList
                     book={book}
                     handleFavourite={handleFavourite}

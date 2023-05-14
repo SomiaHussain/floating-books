@@ -2,7 +2,7 @@ import "../styles/app.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "../Pages/Login/loginPage";
 import Nav from "../Pages/Navigation/nav";
-import RegistrationPage from "../Pages/Register/registerPage";
+import RegistrationPage from "../Pages/Registration/registerPage";
 import FooterSection from "../Pages/Footer/footer";
 import HomePage from "../Pages/Home/homePage";
 import AddBookPage from "../Pages/Book/addBookPage"
