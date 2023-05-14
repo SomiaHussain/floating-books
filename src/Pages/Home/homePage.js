@@ -1,29 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { Grid} from "@mui/material";
-import { getBooks } from "../../services/booksService";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import image from "../../common/assets/Open_book_nae_02.svg.png";
+import { Grid, TextField } from "@mui/material";
+
+import { GetRecentlyAddedBooks } from "../../services/bookService";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { InputAdornment, IconButton } from "@mui/material";
+import "./homePage.css";
+import { GetUserDetails } from "../../services/accountService";
+import { AddFavouriteBook } from "../../services/bookService";
+import BookList from "../../components/booksList";
+import { GetFavouriteBook } from "../../services/bookService";
+import { DeleteFavouriteBook } from "../../services/bookService";
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [booksData, setBooksData] = useState([]);
+  const [filteredData, setFilteredData] = useState(booksData);
+  const [loggedUserDetails, setLoggedUserDetails] = useState({});
+  const [favouriteBooks, setFavouriteBooks] = useState([]);
+
+  useEffect(() => {
+    GetUserDetails(localStorage.getItem("userDetails")).then((res) => {
+      setLoggedUserDetails(res.data);
+
+      GetFavouriteBook(res.data.id).then((result) => {
+        const uniqueBooksMap = new Map();
+        result?.data.forEach((item) => {
+          const data = { ...item.book, favouritesId: item.id };
+          uniqueBooksMap.set(item.bookId, data);
+        });
+        setFavouriteBooks(Array.from(uniqueBooksMap.values()));
+      });
+    });
+
+    GetRecentlyAddedBooks().then((res) => {
+      const bookData = res.data;
+      bookData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setBooksData(bookData);
+      setFilteredData(bookData);
+    });
+  }, [setFavouriteBooks]);
+
+  const searchItems = (searchTerm, dataArray) => {
+    searchTerm = searchTerm.toLowerCase().trim();
+    return dataArray.filter((item) => {
+      const { title, isbn, author } = item;
+      const lowerCaseTitle = title.toLowerCase();
+      const lowerCaseIsbn = isbn.toLowerCase();
+      const lowerCaseAuthor = author.toLowerCase();
+
+      return (
+        lowerCaseTitle.includes(searchTerm) ||
+        lowerCaseIsbn.includes(searchTerm) ||
+        lowerCaseAuthor.includes(searchTerm)
+      );
+    });
+  };
+  const handleFavourite = (book, favouriteId) => {
+    const currentDate = new Date();
+    if (isFavourite(book.id)) {
+      const updatedItems = favouriteBooks.filter((i) => i !== book);
+      setFavouriteBooks(updatedItems);
+      DeleteFavouriteBook(favouriteId);
+    } else {
+      AddFavouriteBook(
+        book.id,
+        loggedUserDetails.id,
+        currentDate.toDateString()
+      ).then(() => {
+        setFavouriteBooks([...favouriteBooks, book]);
+      });
+    }
+  };
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
-  };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(searchTerm);
+    search(event.target.value);
   };
 
-  useEffect(() => {
-    getBooks().then((data) => setBooksData(data));
-  }, []);
+  const search = (value) => {
+    if (value === "") {
+      setFilteredData(booksData);
+    } else {
+      const searchedResults = searchItems(searchTerm, booksData);
+      setFilteredData(searchedResults);
+    }
+  };
+
+  const handlePaste = (e) => {
+    const pastedValue = e.clipboardData.getData("text");
+    setSearchTerm(pastedValue);
+    search(pastedValue);
+  };
+
+  const isFavourite = (bookId) => {
+    if (
+      favouriteBooks?.some(
+        (obj) => obj.id === bookId && obj.ownerId === loggedUserDetails.id
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div sx={{ paddingTop: "10px" }}>
       <Grid
@@ -35,52 +116,81 @@ const HomePage = () => {
       >
         <h2>Welcome to floating books</h2>
         <Grid item xs={12}>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleChange}
-            />
-            <button type="submit">Search</button>
-          </form>
+          <TextField
+            placeholder="Title, ISBN, Author"
+            type="text"
+            variant="outlined"
+            fullWidth
+            size="small"
+            onChange={handleChange}
+            onPaste={handlePaste}
+            value={searchTerm}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchRoundedIcon />
+                </InputAdornment>
+              ),
+
+              endAdornment: searchTerm && (
+                <IconButton
+                  onClick={(e) => {
+                    e.target.value = "";
+                    handleChange(e);
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              ),
+            }}
+          />
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
+      <Grid className="bookRow" container spacing={2}>
         <Grid item xs={12} md={12}>
-          <h2>Favorites</h2>
+          <h2>Favourites</h2>
         </Grid>
-          {booksData.map((book) => (
-            <Grid key={book.ISBN} item xs={12} md={2}>
-              <Card className="favoritesSection" sx={{ maxWidth: 345 }}>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image={image}
-                  title="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {book.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <p>Author: {book.author}</p>
-                    <p>Release Date: {book.releaseDate}</p>
-                    <p>Donator Comment: {book.donatorcomment}</p>
-                    <p>Donate Date: {book.donateDate}</p>
-                    <p>Genre ID: {book.genreId}</p>
-                    <p>Donator ID: {book.donatorId}</p>
-                    <p>Owner ID: {book.ownerId}</p>
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+        {favouriteBooks?.length === 0 ? (
+          <Grid item xs={12} md={12}>
+            <h4 className="noResultsFound">No favourites found.</h4>
+          </Grid>
+        ) : (
+          favouriteBooks
+            ?.slice(0, 6)
+            .map((book) => (
+              <BookList
+                book={book}
+                handleFavourite={handleFavourite}
+                isFavourite={isFavourite}
+              />
+            ))
+        )}
+      </Grid>
+
+      <Grid className="bookRow" container spacing={2}>
+        <Grid item xs={12} md={12}>
+          <h2>Recently added books</h2>
         </Grid>
+        {filteredData?.length === 0 ? (
+          <Grid item xs={12} md={12}>
+            <h4 className="noResultsFound">No results found.</h4>
+          </Grid>
+        ) : (
+          filteredData
+            ?.slice(0, 6)
+            .map(
+              (book) =>
+                !isFavourite(book.id) && (
+                  <BookList
+                    book={book}
+                    handleFavourite={handleFavourite}
+                    isFavourite={isFavourite}
+                  />
+                )
+            )
+        )}
+      </Grid>
     </div>
   );
 };

@@ -1,10 +1,38 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import axios from "axios";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-export const Register = async ({ email, password }) => {
+export const Register = async ({
+  firstName,
+  lastName,
+  email,
+  password,
+  userName,
+  postalAddress
+}) => {
   try {
-    return await createUserWithEmailAndPassword(auth, email, password);
+    return createUserWithEmailAndPassword(auth, email, password).then(
+      (result) => {
+        if (result?.user) {
+          const currentUser = auth.currentUser;
+          return updateProfile(currentUser, { displayName: userName }).then(
+            async () => {
+              try {
+                return await axios.post("http://localhost:4000/users", {
+                  firstName,
+                  lastName,
+                  userName,
+                  postalAddress
+                });
+              } catch (error) {
+                console.error("Error:", error);
+              }
+            }
+          );
+        }
+      }
+    );
   } catch (error) {
     throw new Error(error.message);
   }
@@ -15,5 +43,21 @@ export const Login = async ({ email, password }) => {
     return await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     throw new Error(error.message);
+  }
+};
+
+export const GetUserDetails = async (userData) => {
+  const data = JSON.parse(userData);
+  const userName = data?.providerData[0].displayName;
+
+  try {
+    return await axios.post(
+      "http://localhost:4000/users/get-user-by-username",
+      {
+        userName
+      }
+    );
+  } catch (error) {
+    console.error("Error:", error);
   }
 };

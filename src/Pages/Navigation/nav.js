@@ -24,6 +24,10 @@ const NavBar = () => {
   if (!isUserLogged) {
     pages = [...pages, "login", "register"];
   }
+
+  if(isUserLogged){
+    pages = [...pages, "add-book"];
+  }
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const navigate = useNavigate();
@@ -60,9 +64,6 @@ const NavBar = () => {
       localStorage.removeItem("userDetails");
       setUserDetails({});
       window.location.reload(true);
-    }
-    if (setting) {
-      navigate("/" + setting);
     }
     setAnchorElUser(null);
   };
@@ -181,7 +182,7 @@ const NavBar = () => {
                 onClose={handleCloseUserMenu}
               >
                 <div className="email">
-                  <p>{userDetails?.email}</p>
+                  <p>{userDetails?.displayName}</p>
                 </div>
                 {settings.map((setting) => (
                   <MenuItem

@@ -3,32 +3,14 @@ import { Button, TextField, Grid, Container } from "@mui/material";
 import "./registerPage.css";
 import { Register } from "../../services/accountService";
 import { useNavigate } from "react-router-dom";
-import { UserForm } from '../Registration/UserForm';
 
-
-const RegistrationPage = () => {
+const ConfirmationPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
-    firstName: "",
-    lastName: "",
-    username: "",
-    postalAddress: "",
     password: "",
     confirmPassword: ""
   });
-
-  // go back to previous step
-  const prevStep = () => {
-    const { step } = this.state;
-    this.setState({ step: step - 1 });
-  }
-
-  const nextStep = () => {
-    const { step } = this.state;
-    this.setState({ step: step + 1 });
-  }
-
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
@@ -57,8 +39,7 @@ const RegistrationPage = () => {
 
   return (
     <Container sx={{ paddingTop: "10px" }}>
-      <UserForm />
-      {/* <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Grid
           container
           spacing={3}
@@ -104,9 +85,9 @@ const RegistrationPage = () => {
             Register
           </Button>
         </Grid>
-      </form> */}
+      </form>
     </Container>
   );
 };
 
-export default RegistrationPage;
+export default ConfirmationPage;

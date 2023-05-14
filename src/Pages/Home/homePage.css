@@ -5,3 +5,12 @@
 .favoritesSection {
     text-align: center;
 }
+
+.noResultsFound {
+    text-align: center;
+}
+
+.bookRow{
+    padding-left: 40px;
+    padding-right: 40px;
+}
