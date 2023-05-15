@@ -9,32 +9,43 @@ export const Register = async ({
   email,
   password,
   userName,
-  postalAddress
+  postalAddress,
 }) => {
+  const formData = {};
+  formData.firstName = firstName;
+  formData.lastName = lastName;
+  formData.userName = userName;
+  formData.postalAddress = postalAddress;
   try {
-    return createUserWithEmailAndPassword(auth, email, password).then(
-      (result) => {
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then((result) => {
         if (result?.user) {
           const currentUser = auth.currentUser;
-          return updateProfile(currentUser, { displayName: userName }).then(
-            async () => {
+          return updateProfile(currentUser, { displayName: userName })
+            .then(async () => {
               try {
-                return await axios.post("http://localhost:4000/users", {
-                  firstName,
-                  lastName,
-                  userName,
-                  postalAddress
-                });
+                return await axios
+                  .post("http://localhost:4000/users", formData)
+                  .then((res) => {})
+                  .catch((error) => {
+                    console.error("Axios Error:", error);
+                  });
               } catch (error) {
                 console.error("Error:", error);
               }
-            }
-          );
+            })
+            .catch((error) => {
+              console.error("updateProfile Error:", error);
+            });
+        } else {
+          console.error("Error: result?user");
         }
-      }
-    );
+      })
+      .catch((error) => {
+        console.error("createUserWithEmailAndPassword Error:", error);
+      });
   } catch (error) {
-    throw new Error(error.message);
+    console.error("Overall Error:", error);
   }
 };
 
@@ -46,18 +57,21 @@ export const Login = async ({ email, password }) => {
   }
 };
 
-export const GetUserDetails = async (userData) => {
+export const GetUserDetails = async (userData, setUserDetails) => {
   const data = JSON.parse(userData);
   const userName = data?.providerData[0].displayName;
+  const formData = {};
+  formData.userName = userName;
 
-  try {
-    return await axios.post(
-      "http://localhost:4000/users/get-user-by-username",
-      {
-        userName
-      }
-    );
-  } catch (error) {
-    console.error("Error:", error);
+  if (data?.providerData) {
+    try {
+      return await axios
+        .post("http://localhost:4000/users/search", formData)
+        .then((res) => {
+          setUserDetails(res.data);
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 };

@@ -18,41 +18,31 @@ const HomePage = () => {
   const [filteredData, setFilteredData] = useState(booksData);
   const [loggedUserDetails, setLoggedUserDetails] = useState({});
   const [favouriteBooks, setFavouriteBooks] = useState([]);
+  const [userDetails, setUserDetails] = useState();
 
   useEffect(() => {
-    GetUserDetails(localStorage.getItem("userDetails")).then((res) => {
-      setLoggedUserDetails(res.data);
-
-      GetFavouriteBook(res.data.id).then((result) => {
-        const uniqueBooksMap = new Map();
-        result?.data.forEach((item) => {
-          const data = { ...item.book, favouritesId: item.id };
-          uniqueBooksMap.set(item.bookId, data);
-        });
-        setFavouriteBooks(Array.from(uniqueBooksMap.values()));
-      });
-    });
-
-    GetRecentlyAddedBooks().then((res) => {
-      const bookData = res.data;
-      bookData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setBooksData(bookData);
-      setFilteredData(bookData);
-    });
+    GetUserDetails(localStorage.getItem("userDetails"), setUserDetails).then(
+      (res) => {
+        if (res?.data) {
+          setLoggedUserDetails(res.data);
+          GetFavouriteBook(res.data.id, setFavouriteBooks);
+        }
+      }
+    );
+    GetRecentlyAddedBooks(setBooksData, setFilteredData);
   }, [setFavouriteBooks]);
 
-  const searchItems = (searchTerm, dataArray) => {
-    searchTerm = searchTerm.toLowerCase().trim();
-    return dataArray.filter((item) => {
-      const { title, isbn, author } = item;
-      const lowerCaseTitle = title.toLowerCase();
-      const lowerCaseIsbn = isbn.toLowerCase();
-      const lowerCaseAuthor = author.toLowerCase();
+  const searchItems = (term, dataArray) => {
+    const newTerm = term.toLowerCase().trim();
+    return dataArray.filter((book) => {
+      const lowerCaseTitle = book?.title.toLowerCase();
+      const lowerCaseIsbn = book?.ISBN.toLowerCase();
+      const lowerCaseAuthor = book?.author.toLowerCase();
 
       return (
-        lowerCaseTitle.includes(searchTerm) ||
-        lowerCaseIsbn.includes(searchTerm) ||
-        lowerCaseAuthor.includes(searchTerm)
+        lowerCaseTitle.includes(newTerm) ||
+        lowerCaseIsbn.includes(newTerm) ||
+        lowerCaseAuthor.includes(newTerm)
       );
     });
   };
@@ -82,7 +72,7 @@ const HomePage = () => {
     if (value === "") {
       setFilteredData(booksData);
     } else {
-      const searchedResults = searchItems(searchTerm, booksData);
+      const searchedResults = searchItems(value, booksData);
       setFilteredData(searchedResults);
     }
   };
@@ -183,6 +173,7 @@ const HomePage = () => {
               (book) =>
                 !isFavourite(book.id) && (
                   <BookList
+                    key={book.id}
                     book={book}
                     handleFavourite={handleFavourite}
                     isFavourite={isFavourite}

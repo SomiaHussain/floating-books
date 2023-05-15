@@ -10,11 +10,12 @@ import { AddBook } from "../../services/bookService";
 const AddBookPage = () => {
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState();
 
   useEffect(() => {
     const storedData = localStorage.getItem("userDetails");
     setUserData(JSON.parse(storedData));
-    console.log(userData);
+    GetUserDetails(localStorage.getItem("userDetails"), setUserDetails);
   }, []);
 
   const [bookData, setBookData] = useState({
@@ -24,7 +25,7 @@ const AddBookPage = () => {
     releaseDate: "",
     image: "",
     donatorComment: "",
-    donateDate: ""
+    donateDate: "",
   });
 
   const handleChange = (e) => {
@@ -35,19 +36,21 @@ const AddBookPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    GetUserDetails(localStorage.getItem("userDetails")).then((res) => {
-      const bookDetails = {
-        ...bookData,
-        ownerId: res.data.id,
-        genreId: 1,
-        donatorId: res.data.id
-      };
-      AddBook(bookDetails).then((res) => {
+    const bookDetails = {
+      ...bookData,
+      ownerId: userDetails[0].id,
+      genreId: 7,
+      donatorId: userDetails[0].id,
+    };
+    AddBook(bookDetails)
+      .then((res) => {
         if (res.status === 201) {
-          navigate("/")
+          navigate("/");
         }
+      })
+      .catch((error) => {
+        console.error("addbook catch error", error.message);
       });
-    });
   };
 
   return (
