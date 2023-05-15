@@ -7,6 +7,20 @@ import "./addBook.css";
 import { GetUserDetails } from "../../services/accountService";
 import { AddBook } from "../../services/bookService";
 
+const formatDate = (date) => {
+  const d = new Date(date);
+  let month = "" + (d.getMonth() + 1);
+  let day = "" + d.getDate();
+  const year = d.getFullYear();
+  if (month.length < 2) {
+    month = "0" + month;
+  }
+  if (day.length < 2) {
+    day = "0" + day;
+  }
+  return [year, month, day].join("-");
+};
+
 const AddBookPage = () => {
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
@@ -25,12 +39,16 @@ const AddBookPage = () => {
     releaseDate: "",
     image: "",
     donatorComment: "",
-    donateDate: "",
+    donateDate: formatDate(new Date()),
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBookData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === "image") {
+      setBookData((prevData) => ({ ...prevData, [name]: e.target.files[0] }));
+    } else {
+      setBookData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -92,7 +110,7 @@ const AddBookPage = () => {
 
         <TextField
           label="Release Date"
-          type="text"
+          type="date"
           required={true}
           name="releaseDate"
           value={bookData.releaseDate}
@@ -103,10 +121,9 @@ const AddBookPage = () => {
 
         <TextField
           label="Image url"
-          type="text"
+          type="file"
           required={true}
           name="image"
-          value={bookData.image}
           onChange={handleChange}
           margin="normal"
           fullWidth
@@ -122,17 +139,6 @@ const AddBookPage = () => {
           multiline
           rows={5}
           maxRows={4}
-          margin="normal"
-          fullWidth
-        />
-
-        <TextField
-          label="Donate Date"
-          type="text"
-          required={true}
-          name="donateDate"
-          value={bookData.donateDate}
-          onChange={handleChange}
           margin="normal"
           fullWidth
         />

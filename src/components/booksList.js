@@ -13,10 +13,12 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import "./bookList.css";
 
 const BookList = ({ book, handleFavourite, isFavourite }) => {
+  const bookImage = book.image === "" ? image : book.image;
   return (
     <Grid key={book.ISBN} item xs={12} md={2}>
       <Card className="bookDetails" sx={{ maxWidth: 345 }}>
-        <CardMedia sx={{ height: 140 }} image={image} />
+        <CardMedia sx={{ height: 140 }} image={bookImage} />
+
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {book.title}

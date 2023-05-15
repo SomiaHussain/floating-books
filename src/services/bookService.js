@@ -13,16 +13,21 @@ export const AddBook = async ({
   genreId,
   favouritesId,
 }) => {
-  const formData = {};
-  formData.title = title;
-  formData.ISBN = isbn;
-  formData.author = author;
-  formData.releaseDate = releaseDate;
-  formData.donatorcomment = donatorComment;
-  formData.donateDate = donateDate;
-  formData.ownerId = ownerId;
-  formData.genreId = 7;
-  formData.donatorId = donatorId;
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("ISBN", isbn);
+  formData.append("author", author);
+  formData.append("releaseDate", releaseDate);
+  formData.append("donatorcomment", donatorComment);
+  formData.append("donateDate", donateDate);
+  formData.append("genreId", 7);
+  formData.append("donatorId", donatorId);
+  formData.append("ownerId", ownerId);
+  if (image) {
+    formData.append("image", image);
+  } else {
+    formData.append("image", "");
+  }
 
   try {
     return await axios.post("http://localhost:4000/books", formData);
