@@ -5,7 +5,8 @@ import Nav from "../Pages/Navigation/nav";
 import RegistrationPage from "../Pages/Registration/registerPage";
 import FooterSection from "../Pages/Footer/footer";
 import HomePage from "../Pages/Home/homePage";
-import AddBookPage from "../Pages/Book/addBookPage"
+import AddBookPage from "../Pages/Book/addBookPage";
+import DashboardPage from "../Pages/Book/dashboardPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/add-book" element={<AddBookPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Routes>
       </Router>
       <FooterSection />

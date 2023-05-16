@@ -11,7 +11,7 @@ export const AddBook = async ({
   donateDate,
   ownerId,
   genreId,
-  favouritesId
+  favouritesId,
 }) => {
   try {
     return await axios.post("http://localhost:4000/books", {
@@ -24,7 +24,7 @@ export const AddBook = async ({
       donateDate,
       ownerId,
       genreId,
-      donatorId
+      donatorId,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -44,7 +44,7 @@ export const AddFavouriteBook = async (bookId, userId, createDate) => {
     return await axios.post("http://localhost:4000/favourites", {
       bookId,
       userId,
-      createDate
+      createDate,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -67,4 +67,43 @@ export const DeleteFavouriteBook = async (favouriteId) => {
   } catch (error) {
     console.error("Error:", error);
   }
+};
+
+export const GetOrderBooks = async (setOrderBooks, setAlert) => {
+  const endpoint = "http://localhost:4000/orders";
+  return axios
+    .get(endpoint)
+    .then((response) => {
+      setOrderBooks(response.data);
+      if (response.data.length === 0) {
+        setAlert({ message: "No Order book!", isSuccess: true });
+      } else {
+        setAlert({ message: "", isSuccess: true });
+      }
+    })
+    .catch(() => {
+      setOrderBooks([]);
+      setAlert({
+        message: "Get error, please try again later!",
+        isSuccess: false,
+      });
+    });
+};
+
+export const UpdateOrder = async (orderId, newStatus, setAlert) => {
+  const endpoint = `http://localhost:4000/orders/${orderId}`;
+  const formData = {};
+  formData.status = newStatus;
+
+  return axios
+    .patch(endpoint, formData)
+    .then((response) => {
+      setAlert({ message: "Status updated!", isSuccess: true });
+    })
+    .catch(() => {
+      setAlert({
+        message: "Get error, please try again later!",
+        isSuccess: false,
+      });
+    });
 };

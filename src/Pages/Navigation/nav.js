@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import './nav.css'
+import "./nav.css";
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -25,7 +25,7 @@ const NavBar = () => {
     pages = [...pages, "login", "register"];
   }
 
-  if(isUserLogged){
+  if (isUserLogged) {
     pages = [...pages, "add-book"];
   }
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -60,6 +60,9 @@ const NavBar = () => {
   };
 
   const handleCloseUserMenu = (setting) => {
+    if (setting === "Dashboard") {
+      navigate("/dashboard");
+    }
     if (setting === "Logout") {
       localStorage.removeItem("userDetails");
       setUserDetails({});
@@ -85,7 +88,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             Floating books
@@ -107,18 +110,18 @@ const NavBar = () => {
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "left"
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "left"
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={navigateCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
-                top: "50px"
+                top: "50px",
               }}
             >
               {pages.map((page) => (
@@ -142,7 +145,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             Floating books
@@ -171,12 +174,12 @@ const NavBar = () => {
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

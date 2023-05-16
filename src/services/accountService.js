@@ -9,7 +9,7 @@ export const Register = async ({
   email,
   password,
   userName,
-  postalAddress
+  postalAddress,
 }) => {
   try {
     return createUserWithEmailAndPassword(auth, email, password).then(
@@ -23,7 +23,7 @@ export const Register = async ({
                   firstName,
                   lastName,
                   userName,
-                  postalAddress
+                  postalAddress,
                 });
               } catch (error) {
                 console.error("Error:", error);
@@ -46,18 +46,37 @@ export const Login = async ({ email, password }) => {
   }
 };
 
-export const GetUserDetails = async (userData) => {
+// export const GetUserDetails = async (userData) => {
+//   const data = JSON.parse(userData);
+//   const userName = data?.providerData[0].displayName;
+
+//   try {
+//     return await axios.post(
+//       "http://localhost:4000/users/get-user-by-username",
+//       {
+//         userName
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
+
+export const GetUserDetails = async (userData, setUserDetails) => {
   const data = JSON.parse(userData);
   const userName = data?.providerData[0].displayName;
+  const formData = {};
+  formData.userName = userName;
 
-  try {
-    return await axios.post(
-      "http://localhost:4000/users/get-user-by-username",
-      {
-        userName
-      }
-    );
-  } catch (error) {
-    console.error("Error:", error);
+  if (data?.providerData) {
+    try {
+      return await axios
+        .post("http://localhost:4000/users/search", formData)
+        .then((res) => {
+          setUserDetails(res.data);
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 };
