@@ -7,14 +7,29 @@ import "./addBook.css";
 import { GetUserDetails } from "../../services/accountService";
 import { AddBook } from "../../services/bookService";
 
+const formatDate = (date) => {
+  const d = new Date(date);
+  let month = "" + (d.getMonth() + 1);
+  let day = "" + d.getDate();
+  const year = d.getFullYear();
+  if (month.length < 2) {
+    month = "0" + month;
+  }
+  if (day.length < 2) {
+    day = "0" + day;
+  }
+  return [year, month, day].join("-");
+};
+
 const AddBookPage = () => {
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState();
 
   useEffect(() => {
     const storedData = localStorage.getItem("userDetails");
     setUserData(JSON.parse(storedData));
-    console.log(userData);
+    GetUserDetails(localStorage.getItem("userDetails"), setUserDetails);
   }, []);
 
   const [bookData, setBookData] = useState({
@@ -24,30 +39,35 @@ const AddBookPage = () => {
     releaseDate: "",
     image: "",
     donatorComment: "",
-    donateDate: ""
+    donateDate: formatDate(new Date()),
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBookData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === "image") {
+      setBookData((prevData) => ({ ...prevData, [name]: e.target.files[0] }));
+    } else {
+      setBookData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    GetUserDetails(localStorage.getItem("userDetails")).then((res) => {
-      const bookDetails = {
-        ...bookData,
-        ownerId: res.data.id,
-        genreId: 1,
-        donatorId: res.data.id
-      };
-      AddBook(bookDetails).then((res) => {
+    const bookDetails = {
+      ...bookData,
+      ownerId: userDetails.id,
+      genreId: 7,
+      donatorId: userDetails.id,
+    };
+    AddBook(bookDetails)
+      .then((res) => {
         if (res.status === 201) {
-          navigate("/")
+          navigate("/");
         }
+      })
+      .catch((error) => {
+        console.error("addbook catch error", error.message);
       });
-    });
   };
 
   return (
@@ -89,7 +109,7 @@ const AddBookPage = () => {
 
         <TextField
           label="Release Date"
-          type="text"
+          type="date"
           required={true}
           name="releaseDate"
           value={bookData.releaseDate}
@@ -100,10 +120,9 @@ const AddBookPage = () => {
 
         <TextField
           label="Image url"
-          type="text"
+          type="file"
           required={true}
           name="image"
-          value={bookData.image}
           onChange={handleChange}
           margin="normal"
           fullWidth
@@ -119,17 +138,6 @@ const AddBookPage = () => {
           multiline
           rows={5}
           maxRows={4}
-          margin="normal"
-          fullWidth
-        />
-
-        <TextField
-          label="Donate Date"
-          type="text"
-          required={true}
-          name="donateDate"
-          value={bookData.donateDate}
-          onChange={handleChange}
           margin="normal"
           fullWidth
         />
