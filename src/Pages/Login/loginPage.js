@@ -8,7 +8,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,12 +16,18 @@ const LoginPage = () => {
     const { name, value } = event.target;
     setLoginData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!loginData.email || !loginData.password) {
+      setErrorMessage("Please input missing data!");
+      return;
+    }
+
     try {
       const userData = await Login(loginData);
       localStorage.setItem("userDetails", JSON.stringify(userData.user));

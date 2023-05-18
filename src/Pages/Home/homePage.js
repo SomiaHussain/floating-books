@@ -52,7 +52,6 @@ const HomePage = () => {
         setFavouriteBooks(updatedItems);
       });
     } else {
-
       AddFavouriteBook(
         book.id,
         userDetails.id,
@@ -96,7 +95,7 @@ const HomePage = () => {
         justify={"center"}
         alignItems={"center"}
       >
-        <h2>Welcome to floating books</h2>
+        {/* <h2>Welcome to floating books</h2> */}
         <Grid item xs={12}>
           <TextField
             placeholder="Title, ISBN, Author"
@@ -123,7 +122,7 @@ const HomePage = () => {
                 >
                   <CloseRoundedIcon />
                 </IconButton>
-              )
+              ),
             }}
           />
         </Grid>

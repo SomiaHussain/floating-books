@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Container, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Select, MenuItem, InputLabel } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import "./addBook.css";
 import { GetUserDetails } from "../../services/accountService";
 import { AddBook } from "../../services/bookService";
+import { GetGenres } from "../../services/genreService";
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -22,6 +23,7 @@ const formatDate = (date) => {
 };
 
 const AddBookPage = () => {
+  const [genreList, setGenreList] = useState([]);
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState();
@@ -36,11 +38,16 @@ const AddBookPage = () => {
     title: "",
     isbn: "",
     author: "",
+    selectGenre: "",
     releaseDate: "",
     image: "",
     donatorComment: "",
     donateDate: formatDate(new Date()),
   });
+
+  useEffect(() => {
+    GetGenres(setGenreList);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,12 +60,18 @@ const AddBookPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const genreId = genreList.filter((a) => a.genre === bookData.selectGenre)[0]
+      .id;
+
     const bookDetails = {
       ...bookData,
+      genreId: genreId,
       ownerId: userDetails.id,
-      genreId: 7,
       donatorId: userDetails.id,
     };
+
+    console.log("===============bookDetails========", bookDetails);
     AddBook(bookDetails)
       .then((res) => {
         if (res.status === 201) {
@@ -107,6 +120,21 @@ const AddBookPage = () => {
           fullWidth
         />
 
+        <InputLabel id="selectGenreLabel">Genre:</InputLabel>
+        <Select
+          required={true}
+          id="selectGenre"
+          name="selectGenre"
+          value={bookData.selectGenre}
+          onChange={handleChange}
+        >
+          {genreList.map((g) => (
+            <MenuItem key={g.genre} value={g.genre}>
+              {g.genre}
+            </MenuItem>
+          ))}
+        </Select>
+
         <TextField
           label="Release Date"
           type="date"
@@ -137,7 +165,7 @@ const AddBookPage = () => {
           onChange={handleChange}
           multiline
           rows={5}
-          maxRows={4}
+          // maxRows={4}
           margin="normal"
           fullWidth
         />

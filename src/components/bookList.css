@@ -1,3 +1,7 @@
-.bookDetails{
-   text-align: center;
+.bookDetails {
+  text-align: center;
+}
+
+li {
+  display: block;
 }

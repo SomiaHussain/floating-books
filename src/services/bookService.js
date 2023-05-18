@@ -11,7 +11,7 @@ export const AddBook = async ({
   donateDate,
   ownerId,
   genreId,
-  favouritesId,
+  // favouritesId,
 }) => {
   const formData = new FormData();
   formData.append("title", title);
@@ -20,7 +20,7 @@ export const AddBook = async ({
   formData.append("releaseDate", releaseDate);
   formData.append("donatorcomment", donatorComment);
   formData.append("donateDate", donateDate);
-  formData.append("genreId", 7);
+  formData.append("genreId", genreId);
   formData.append("donatorId", donatorId);
   formData.append("ownerId", ownerId);
   if (image) {
@@ -29,16 +29,25 @@ export const AddBook = async ({
     formData.append("image", "");
   }
 
+  console.log("=========formData=========", formData);
+
   try {
     return await axios.post("http://localhost:4000/books", formData);
+    // return await axios.post(
+    //   "http://floating-books-api.onrender.com/books",
+    //   formData
+    // );
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
   }
 };
 
 export const GetRecentlyAddedBooks = async (setBooksData, setFilteredData) => {
   try {
     const result = await axios.get("http://localhost:4000/books");
+    // const result = await axios.get(
+    //   "http://floating-books-api.onrender.com/books"
+    // );
     const bookData = result.data;
     bookData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     setBooksData(bookData);
@@ -56,6 +65,10 @@ export const AddFavouriteBook = async (bookId, userId, createDate) => {
 
   try {
     return await axios.post("http://localhost:4000/favourites", formData);
+    // return await axios.post(
+    //   "http://floating-books-api.onrender.com/favourites",
+    //   formData
+    // );
   } catch (error) {
     console.error("Error:", error);
   }
@@ -63,8 +76,12 @@ export const AddFavouriteBook = async (bookId, userId, createDate) => {
 
 export const GetFavouriteBook = async (userId, setFavouriteBooks) => {
   try {
-    const result = await axios.get(
-      `http://localhost:4000/favourites/${userId}`
+    const formData = {};
+    formData.userId = userId;
+    const result = await axios.post(
+      "http://localhost:4000/favourites/search",
+      // "http://floating-books-api.onrender.com/favourites/search",
+      formData
     );
     const uniqueBooksMap = new Map();
     result?.data.forEach((item) => {
@@ -73,7 +90,7 @@ export const GetFavouriteBook = async (userId, setFavouriteBooks) => {
     });
     setFavouriteBooks(Array.from(uniqueBooksMap.values()));
   } catch (error) {
-    console.error("Error:", error);
+    console.log("Error:", error);
   }
 };
 
@@ -81,6 +98,7 @@ export const DeleteFavouriteBook = async (favouriteId) => {
   try {
     return await axios.delete(
       `http://localhost:4000/favourites/${favouriteId}`
+      // `http://floating-books-api.onrender.com/favourites/${favouriteId}`
     );
   } catch (error) {
     console.error("Error:", error);

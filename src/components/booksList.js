@@ -18,19 +18,18 @@ const BookList = ({ book, handleFavourite, isFavourite }) => {
     <Grid key={book.ISBN} item xs={12} md={2}>
       <Card className="bookDetails" sx={{ maxWidth: 345 }}>
         <CardMedia sx={{ height: 140 }} image={bookImage} />
-
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {book.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <p>Author: {book.author}</p>
-            <p>Release Date: {book.releaseDate}</p>
-            <p>Donator Comment: {book.donatorcomment}</p>
-            <p>Donate Date: {book.donateDate}</p>
-            <p>Genre ID: {book.genreId}</p>
-            <p>Donator ID: {book.donatorId}</p>
-            <p>Owner ID: {book.ownerId}</p>
+            <li>Author: {book.author}</li>
+            <li>Release Date: {book.releaseDate}</li>
+            {/* <li>Donator Comment: {book.donatorcomment}</li>
+            <li>Donate Date: {book.donateDate}</li> */}
+            <li>Genre: {book.genre.genre}</li>
+            {/* <li>Donator ID: {book.donatorId}</li>
+            <li>Owner ID: {book.ownerId}</li> */}
           </Typography>
         </CardContent>
         <CardActions>

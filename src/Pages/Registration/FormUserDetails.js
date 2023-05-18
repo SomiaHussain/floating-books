@@ -9,7 +9,7 @@ export class FormUserDetails extends Component {
     email: "",
     password: "",
     confirmPassword: "",
-    passwordMatch: ""
+    passwordMatch: "",
   };
 
   validateState = () => {
@@ -22,14 +22,14 @@ export class FormUserDetails extends Component {
       }
     });
 
-    this.validatePasswords();
+    // this.validatePasswords();
 
     this.setState({
       firstName: newErrors.firstName,
       lastName: newErrors.lastName,
       email: newErrors.email,
       password: newErrors.password,
-      confirmPassword: newErrors.confirmPassword
+      confirmPassword: newErrors.confirmPassword,
     });
   };
 
@@ -41,19 +41,21 @@ export class FormUserDetails extends Component {
       values.lastName,
       values.email,
       values.password,
-      values.confirmPassword
+      values.confirmPassword,
     ];
     return formState.every((value) => Boolean(value));
   };
 
   validatePasswords = () => {
+    console.log("=====validate password");
+
     const { values } = this.props;
-    
+
     if (values.password === values.confirmPassword) {
       return true;
     } else {
       this.setState({
-        passwordMatch: "Passwords must match"
+        passwordMatch: "Passwords must match",
       });
       return false;
     }
@@ -62,8 +64,13 @@ export class FormUserDetails extends Component {
   continue = (e) => {
     e.preventDefault();
     this.validateState();
-    if (this.isFormValid() && this.validatePasswords()) {
-      this.props.nextStep();
+    // if (this.isFormValid() && this.validatePasswords()) {
+    //   this.props.nextStep();
+    // }
+    if (this.isFormValid()) {
+      if (this.validatePasswords()) {
+        this.props.nextStep();
+      }
     }
   };
 
