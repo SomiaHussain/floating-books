@@ -12,7 +12,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import "./bookList.css";
 
-const BookList = ({ book, handleFavourite, isFavourite }) => {
+const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
   const bookImage = book.image === "" ? image : book.image;
   return (
     <Grid key={book.ISBN} item xs={12} md={2}>
@@ -32,11 +32,23 @@ const BookList = ({ book, handleFavourite, isFavourite }) => {
             <li>Owner ID: {book.ownerId}</li> */}
           </Typography>
         </CardContent>
+
         <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
+          {/* <Button size="small">Share</Button>
+          <Button size="small">Learn More</Button> */}
           {isFavourite(book) ? (
             <Box sx={{ paddingLeft: "90px" }}>
+              <Button
+                size="small"
+                variant="outlined"
+                type="submit"
+                className="button-order"
+                onClick={() => {
+                  handleOrder(book, book.favouritesId);
+                }}
+              >
+                Order
+              </Button>
               <IconButton
                 onClick={(e) => {
                   e.target.value = "";

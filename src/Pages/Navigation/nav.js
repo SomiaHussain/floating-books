@@ -60,6 +60,9 @@ const NavBar = () => {
   };
 
   const handleCloseUserMenu = (setting) => {
+    if (setting === "Dashboard") {
+      navigate("/dashboard");
+    }
     if (setting === "Logout") {
       localStorage.removeItem("userDetails");
       setUserDetails({});

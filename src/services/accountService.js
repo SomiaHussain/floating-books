@@ -27,10 +27,6 @@ export const Register = async ({
               try {
                 return await axios
                   .post("http://localhost:4000/users", formData)
-                  // .post(
-                  //   "http://floating-books-api.onrender.com/users",
-                  //   formData
-                  // )
                   .then((res) => {})
                   .catch((error) => {
                     console.error("Axios Error:", error);
@@ -72,7 +68,6 @@ export const GetUserDetails = async (userData, setUserDetails) => {
     try {
       return await axios
         .post("http://localhost:4000/users/search", formData)
-        // .post("http://floating-books-api.onrender.com/users/search", formData)
         .then((res) => {
           setUserDetails(...res.data);
           return res;

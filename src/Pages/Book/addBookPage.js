@@ -71,7 +71,6 @@ const AddBookPage = () => {
       donatorId: userDetails.id,
     };
 
-    console.log("===============bookDetails========", bookDetails);
     AddBook(bookDetails)
       .then((res) => {
         if (res.status === 201) {

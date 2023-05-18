@@ -47,8 +47,6 @@ export class FormUserDetails extends Component {
   };
 
   validatePasswords = () => {
-    console.log("=====validate password");
-
     const { values } = this.props;
 
     if (values.password === values.confirmPassword) {
