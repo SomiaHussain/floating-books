@@ -18,7 +18,14 @@ export class FormUserDetails extends Component {
       if (!this.props.values[key]) {
         newErrors[key] = "This field is required.";
       } else {
-        newErrors[key] = "";
+        if (key === "email") {
+          if (this.validateEmail(this.props.values[key])) {
+            console.log("hit")
+            newErrors[key] = "Invalid email address";
+          }
+        } else {
+          newErrors[key] = "";
+        }
       }
     });
 
@@ -33,9 +40,12 @@ export class FormUserDetails extends Component {
     });
   };
 
+  validateEmail = (email) => {
+    return !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+  };
+
   isFormValid = () => {
     const { values } = this.props;
-
     const formState = [
       values.firstName,
       values.lastName,
@@ -48,7 +58,6 @@ export class FormUserDetails extends Component {
 
   validatePasswords = () => {
     const { values } = this.props;
-    
     if (values.password === values.confirmPassword) {
       return true;
     } else {
@@ -61,8 +70,13 @@ export class FormUserDetails extends Component {
 
   continue = (e) => {
     e.preventDefault();
+    const { values } = this.props;
     this.validateState();
-    if (this.isFormValid() && this.validatePasswords()) {
+    if (
+      this.isFormValid() &&
+      this.validatePasswords() &&
+      !this.validateEmail(values.email)
+    ) {
       this.props.nextStep();
     }
   };
@@ -139,7 +153,12 @@ export class FormUserDetails extends Component {
           <p className="errorMessage">{this.state.passwordMatch}</p>
         )}
         <br />
-        <Button data-testId="page1-next-page" color="primary" variant="contained" onClick={this.continue}>
+        <Button
+          data-testId="page1-next-page"
+          color="primary"
+          variant="contained"
+          onClick={this.continue}
+        >
           Continue
         </Button>
       </>

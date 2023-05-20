@@ -19,10 +19,10 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
-  let pages = ["contact", "About us"];
+  let pages = ["Contact", "About us"];
 
   if (!isUserLogged) {
-    pages = [...pages, "login", "register"];
+    pages = [...pages, "Login", "Register"];
   }
 
   if(isUserLogged){
@@ -133,7 +133,7 @@ const NavBar = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
