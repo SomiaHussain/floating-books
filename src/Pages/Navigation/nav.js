@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import './nav.css'
+import "./nav.css";
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -25,10 +25,10 @@ const NavBar = () => {
     pages = [...pages, "Login", "Register"];
   }
 
-  if(isUserLogged){
+  if (isUserLogged) {
     pages = [...pages, "add-book"];
   }
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
+  const settings = ["Profile", "Logout"];
 
   const navigate = useNavigate();
 
@@ -103,6 +103,11 @@ const NavBar = () => {
               <MenuIcon />
             </IconButton>
             <Menu
+              PaperProps={{
+                style: {
+                  width: 230
+                }
+              }}
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -122,7 +127,16 @@ const NavBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => navigateCloseNavMenu(page)}>
+                <MenuItem
+                  sx={{
+                    borderTop: 1,
+                    borderRadius: "16px",
+                    marginBottom: "10px",
+                    borderColor: 'primary.main'
+                  }}
+                  key={page}
+                  onClick={() => navigateCloseNavMenu(page)}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -166,7 +180,12 @@ const NavBar = () => {
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "45px" }}
+                PaperProps={{
+                  style: {
+                    width: 230
+                  }
+                }}
+                sx={{ mt: "35px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
@@ -186,6 +205,12 @@ const NavBar = () => {
                 </div>
                 {settings.map((setting) => (
                   <MenuItem
+                    sx={{
+                      borderTop: 1,
+                      borderRadius: "16px",
+                      marginBottom: "10px",
+                      borderColor: 'secondary.main'
+                    }}
                     key={setting}
                     onClick={() => handleCloseUserMenu(setting)}
                   >

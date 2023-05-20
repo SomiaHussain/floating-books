@@ -135,6 +135,7 @@ const AddBookPage = () => {
           select
           label="Select genre"
           name="genre"
+          required={true}
           value={bookData.genre}
           onChange={handleChange}
           variant="outlined"
