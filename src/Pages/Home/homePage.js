@@ -139,7 +139,12 @@ const HomePage = () => {
         setFavouriteBooks(updatedItems);
       });
 
-      AddOrderBook(book.id, userDetails.id, currentDate.toDateString())
+      AddOrderBook(
+        book.id,
+        userDetails.id,
+        currentDate.toDateString(),
+        localStorage.getItem("userDetails")
+      )
         .then(() => {
           navigate("/dashboard");
         })

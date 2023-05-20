@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField, Grid, Container } from "@mui/material";
 import { Login } from "../../services/accountService";
 import { useNavigate } from "react-router-dom";
+import { sendEmailVerification } from "firebase/auth";
 import "./loginPage.css";
 
 const LoginPage = () => {
@@ -30,10 +31,16 @@ const LoginPage = () => {
 
     try {
       const userData = await Login(loginData);
-      localStorage.setItem("userDetails", JSON.stringify(userData.user));
-      setErrorMessage("");
-      navigate("/");
-      window.location.reload(true);
+
+      if (userData.user.emailVerified) {
+        localStorage.setItem("userDetails", JSON.stringify(userData.user));
+        setErrorMessage("");
+        navigate("/");
+        window.location.reload(true);
+      } else {
+        await sendEmailVerification(userData.user);
+        setErrorMessage("Please do email verification!");
+      }
     } catch (error) {
       setErrorMessage("Authentication failed");
     }

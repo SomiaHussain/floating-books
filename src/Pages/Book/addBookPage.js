@@ -71,7 +71,7 @@ const AddBookPage = () => {
       donatorId: userDetails.id,
     };
 
-    AddBook(bookDetails)
+    AddBook(bookDetails, userData)
       .then((res) => {
         if (res.status === 201) {
           navigate("/");

@@ -1,17 +1,20 @@
 import axios from "axios";
 
-export const AddBook = async ({
-  title,
-  isbn,
-  author,
-  releaseDate,
-  image,
-  donatorComment,
-  donatorId,
-  donateDate,
-  ownerId,
-  genreId,
-}) => {
+export const AddBook = async (
+  {
+    title,
+    isbn,
+    author,
+    releaseDate,
+    image,
+    donatorComment,
+    donatorId,
+    donateDate,
+    ownerId,
+    genreId,
+  },
+  userData
+) => {
   const formData = new FormData();
   formData.append("title", title);
   formData.append("ISBN", isbn);
@@ -31,6 +34,8 @@ export const AddBook = async ({
   const endpoint = "http://localhost:4000/books";
 
   try {
+    const token = userData.stsTokenManager.accessToken;
+    axios.defaults.headers.post["Authorization"] = `Bearer ${token}`;
     return await axios.post(endpoint, formData);
   } catch (error) {
     console.error("Error:", error.message);
@@ -95,7 +100,7 @@ export const DeleteFavouriteBook = async (favouriteId) => {
   }
 };
 
-export const AddOrderBook = async (bookId, userId, createDate) => {
+export const AddOrderBook = async (bookId, userId, createDate, userData) => {
   const formData = {};
   formData.bookId = bookId;
   formData.userId = userId;
@@ -104,7 +109,17 @@ export const AddOrderBook = async (bookId, userId, createDate) => {
   const endpoint = "http://localhost:4000/orders";
 
   try {
-    return await axios.post(endpoint, formData);
+    const token = JSON.parse(userData).stsTokenManager.accessToken;
+    axios.defaults.headers.post["Authorization"] = `Bearer ${token}`;
+    return await axios.post(endpoint, formData).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else {
+        console.error("Error:", error);
+      }
+    });
   } catch (error) {
     console.error("Error:", error);
   }
