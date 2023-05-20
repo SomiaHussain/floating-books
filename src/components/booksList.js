@@ -12,7 +12,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import "./bookList.css";
 
-const BookList = ({ book, handleFavourite, isFavourite }) => {
+const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
   const bookImage = book.image === "" ? image : book.image;
   return (
     <Grid key={book.ISBN} item xs={12} md={2}>
@@ -28,16 +28,27 @@ const BookList = ({ book, handleFavourite, isFavourite }) => {
             <p>Release Date: {book.releaseDate}</p>
             <p>Donator Comment: {book.donatorcomment}</p>
             <p>Donate Date: {book.donateDate}</p>
-            <p>Genre ID: {book.genreId}</p>
-            <p>Donator ID: {book.donatorId}</p>
-            <p>Owner ID: {book.ownerId}</p>
+            <p>Genre: {book.genre.genre}</p>
+            <p>Donator: {book.donator.userName}</p>
+            <p>Owner: {book.owner.userName}</p>
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
+          {/* <Button size="small">Share</Button>
+          <Button size="small">Learn More</Button> */}
           {isFavourite(book) ? (
             <Box sx={{ paddingLeft: "90px" }}>
+              <Button
+                size="small"
+                variant="outlined"
+                type="submit"
+                className="button-order"
+                onClick={() => {
+                  handleOrder(book, book.favouritesId);
+                }}
+              >
+                Order
+              </Button>
               <IconButton
                 onClick={(e) => {
                   e.target.value = "";

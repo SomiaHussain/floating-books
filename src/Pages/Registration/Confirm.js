@@ -7,7 +7,7 @@ export class Confirm extends Component {
   continue = (e) => {
     e.preventDefault();
     Register(this.props.values).then((result) => {
-      window.location.href = '/login';
+      window.location.href = "/login";
     });
   };
 
@@ -18,7 +18,7 @@ export class Confirm extends Component {
 
   render() {
     const {
-      values: { firstName, lastName, email, postalAddress, userName }
+      values: { firstName, lastName, email, postalAddress, userName },
     } = this.props;
     return (
       <>
@@ -55,4 +55,3 @@ export class Confirm extends Component {
 }
 
 export default Confirm;
-

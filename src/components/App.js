@@ -5,8 +5,10 @@ import Nav from "../Pages/Navigation/nav";
 import RegistrationPage from "../Pages/Registration/registerPage";
 import FooterSection from "../Pages/Footer/footer";
 import HomePage from "../Pages/Home/homePage";
-import AddBookPage from "../Pages/Book/addBookPage"
+import AddBookPage from "../Pages/Book/addBookPage";
 import ContactUsPage from "../Pages/ContactUs/contactUsPage";
+import AboutUsPage from "../Pages/AboutUs/aboutUsPage";
+import DashboardPage from "../Pages/Book/dashboardPage";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/add-book" element={<AddBookPage />} />
           <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/aboutUs" element={<AboutUsPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Routes>
       </Router>
       <FooterSection />

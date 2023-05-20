@@ -7,28 +7,39 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { InputAdornment, IconButton } from "@mui/material";
 import "./homePage.css";
 import { GetUserDetails } from "../../services/accountService";
-import { AddFavouriteBook } from "../../services/bookService";
+
+import { AddFavouriteBook, AddOrderBook } from "../../services/bookService";
 import BookList from "../../components/booksList";
 import { GetFavouriteBook } from "../../services/bookService";
 import { DeleteFavouriteBook } from "../../services/bookService";
+import { GetOrderBooks } from "../../services/bookService";
+import sendEmail from "../../services/sendEmail";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [booksData, setBooksData] = useState([]);
   const [filteredData, setFilteredData] = useState(booksData);
   const [favouriteBooks, setFavouriteBooks] = useState([]);
   const [userDetails, setUserDetails] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [orderBooks, setOrderBooks] = useState([]);
 
   useEffect(() => {
     GetUserDetails(localStorage.getItem("userDetails"), setUserDetails).then(
       (res) => {
-        if (res?.data) {
+        if (res?.data[0].id) {
           GetFavouriteBook(res?.data[0].id, setFavouriteBooks);
         }
       }
     );
     GetRecentlyAddedBooks(setBooksData, setFilteredData);
-  }, [setFavouriteBooks]);
+  }, []);
+
+  useEffect(() => {
+    GetOrderBooks(setOrderBooks, () => {});
+  }, []);
 
   const searchItems = (term, dataArray) => {
     const newTerm = term.toLowerCase().trim();
@@ -44,23 +55,38 @@ const HomePage = () => {
       );
     });
   };
+
   const handleFavourite = (book, favouriteId) => {
+    setErrorMessage("");
     const currentDate = new Date();
     if (isFavourite(book)) {
-      DeleteFavouriteBook(favouriteId).then((res) => {
-        const updatedItems = favouriteBooks.filter((i) => i !== book);
-        setFavouriteBooks(updatedItems);
-      });
+      DeleteFavouriteBook(favouriteId)
+        .then((res) => {
+          const updatedItems = favouriteBooks.filter((i) => i !== book);
+          setFavouriteBooks(updatedItems);
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
     } else {
-
-      AddFavouriteBook(
-        book.id,
-        userDetails.id,
-        currentDate.toDateString()
-      ).then(() => {
-        setFavouriteBooks([...favouriteBooks, book]);
-      });
+      AddFavouriteBook(book.id, userDetails.id, currentDate.toDateString())
+        .then(() => {
+          setFavouriteBooks([...favouriteBooks, book]);
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
     }
+
+    // update again
+    GetUserDetails(localStorage.getItem("userDetails"), setUserDetails).then(
+      (res) => {
+        if (res?.data) {
+          GetFavouriteBook(res?.data[0].id, setFavouriteBooks);
+        }
+      }
+    );
+    GetRecentlyAddedBooks(setBooksData, setFilteredData);
   };
 
   const handleChange = (event) => {
@@ -87,10 +113,55 @@ const HomePage = () => {
     return favouriteBooks.some((obj) => obj.id === bookItem.id);
   };
 
+  const handleOrder = (book, favouriteId) => {
+    const currentDate = new Date();
+
+    if (
+      orderBooks.find(
+        (order) =>
+          order.book.id === book.id &&
+          order.status !== "received" &&
+          order.status !== "reject"
+      )
+    ) {
+      setErrorMessage("This book is requested now!");
+      return;
+    }
+
+    if (book.ownerId === userDetails.id) {
+      setErrorMessage("This book is in your house, no need to order!");
+      return;
+    }
+
+    if (isFavourite(book)) {
+      DeleteFavouriteBook(favouriteId).then((res) => {
+        const updatedItems = favouriteBooks.filter((i) => i !== book);
+        setFavouriteBooks(updatedItems);
+      });
+
+      AddOrderBook(book.id, userDetails.id, currentDate.toDateString())
+        .then(() => {
+          navigate("/dashboard");
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+
+      // send email to owner, someone order your book, please follow up @@@
+      const emailData = {};
+      emailData.from = "";
+      emailData.to = book.owner.email;
+      emailData.subject = `${book.title} is requested, please follow up!`;
+      const message = `<p style='font-weight:bold;'>  Dear ${book.owner.userName}, </p> ${userDetails.userName} is requesting your book. Please follow up. Thank you very much. <p style='font-weight:bold;'> Sincerely, Floating Books Admin</p> `;
+      emailData.html = message;
+      sendEmail(emailData, () => {});
+    }
+  };
+
   return (
     <div>
       <Grid
-      sx={{paddingTop:"20px"}}
+        sx={{ paddingTop: "20px" }}
         container
         spacing={3}
         direction={"column"}
@@ -124,7 +195,7 @@ const HomePage = () => {
                 >
                   <CloseRoundedIcon />
                 </IconButton>
-              )
+              ),
             }}
           />
         </Grid>
@@ -133,6 +204,11 @@ const HomePage = () => {
       <Grid className="bookRow" container spacing={2}>
         <Grid item xs={12} md={12}>
           <h2>Favourites</h2>
+        </Grid>
+        <Grid item xs={12}>
+          {errorMessage && (
+            <p className="authenticatedFailed">{errorMessage}</p>
+          )}
         </Grid>
         {favouriteBooks?.length === 0 ? (
           <Grid item xs={12} md={12}>
@@ -143,9 +219,11 @@ const HomePage = () => {
             ?.slice(0, 6)
             .map((book) => (
               <BookList
+                key={book.id}
                 book={book}
                 handleFavourite={handleFavourite}
                 isFavourite={isFavourite}
+                handleOrder={handleOrder}
               />
             ))
         )}
@@ -170,6 +248,7 @@ const HomePage = () => {
                     book={book}
                     handleFavourite={handleFavourite}
                     isFavourite={isFavourite}
+                    handleOrder={handleOrder}
                   />
                 )
             )

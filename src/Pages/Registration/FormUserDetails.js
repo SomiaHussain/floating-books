@@ -9,7 +9,7 @@ export class FormUserDetails extends Component {
     email: "",
     password: "",
     confirmPassword: "",
-    passwordMatch: ""
+    passwordMatch: "",
   };
 
   validateState = () => {
@@ -20,7 +20,7 @@ export class FormUserDetails extends Component {
       } else {
         if (key === "email") {
           if (this.validateEmail(this.props.values[key])) {
-            console.log("hit")
+            console.log("hit");
             newErrors[key] = "Invalid email address";
           }
         } else {
@@ -36,7 +36,7 @@ export class FormUserDetails extends Component {
       lastName: newErrors.lastName,
       email: newErrors.email,
       password: newErrors.password,
-      confirmPassword: newErrors.confirmPassword
+      confirmPassword: newErrors.confirmPassword,
     });
   };
 
@@ -51,7 +51,7 @@ export class FormUserDetails extends Component {
       values.lastName,
       values.email,
       values.password,
-      values.confirmPassword
+      values.confirmPassword,
     ];
     return formState.every((value) => Boolean(value));
   };
@@ -62,7 +62,7 @@ export class FormUserDetails extends Component {
       return true;
     } else {
       this.setState({
-        passwordMatch: "Passwords must match"
+        passwordMatch: "Passwords must match",
       });
       return false;
     }
@@ -154,7 +154,7 @@ export class FormUserDetails extends Component {
         )}
         <br />
         <Button
-          data-testId="page1-next-page"
+          // data-testId="page1-next-page"
           color="primary"
           variant="contained"
           onClick={this.continue}

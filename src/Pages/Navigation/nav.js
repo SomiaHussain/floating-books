@@ -19,7 +19,7 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
-  let pages = ["Contact", "About us"];
+  let pages = ["Contact", "aboutUs"];
 
   if (!isUserLogged) {
     pages = [...pages, "Login", "Register"];
@@ -28,7 +28,7 @@ const NavBar = () => {
   if (isUserLogged) {
     pages = [...pages, "add-book"];
   }
-  const settings = ["Profile", "Logout"];
+  const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const navigate = useNavigate();
 
@@ -60,6 +60,9 @@ const NavBar = () => {
   };
 
   const handleCloseUserMenu = (setting) => {
+    if (setting === "Dashboard") {
+      navigate("/dashboard");
+    }
     if (setting === "Logout") {
       localStorage.removeItem("userDetails");
       setUserDetails({});
@@ -85,7 +88,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             Floating books
@@ -105,25 +108,25 @@ const NavBar = () => {
             <Menu
               PaperProps={{
                 style: {
-                  width: 230
-                }
+                  width: 230,
+                },
               }}
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "left"
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "left"
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={navigateCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
-                top: "50px"
+                top: "50px",
               }}
             >
               {pages.map((page) => (
@@ -132,7 +135,7 @@ const NavBar = () => {
                     borderTop: 1,
                     borderRadius: "16px",
                     marginBottom: "10px",
-                    borderColor: 'primary.main'
+                    borderColor: "primary.main",
                   }}
                   key={page}
                   onClick={() => navigateCloseNavMenu(page)}
@@ -156,7 +159,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             Floating books
@@ -182,20 +185,20 @@ const NavBar = () => {
               <Menu
                 PaperProps={{
                   style: {
-                    width: 230
-                  }
+                    width: 230,
+                  },
                 }}
                 sx={{ mt: "35px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
@@ -209,7 +212,7 @@ const NavBar = () => {
                       borderTop: 1,
                       borderRadius: "16px",
                       marginBottom: "10px",
-                      borderColor: 'secondary.main'
+                      borderColor: "secondary.main",
                     }}
                     key={setting}
                     onClick={() => handleCloseUserMenu(setting)}

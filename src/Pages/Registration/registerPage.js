@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { Container } from "@mui/material";
 import "./registerPage.css";
 import { UserForm } from "../Registration/UserForm";

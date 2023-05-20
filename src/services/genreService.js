@@ -1,8 +1,12 @@
 import axios from "axios";
 
-export const GetAllGenres = async () => {
+export const GetGenres = async (setGenreList) => {
+  const endpoint = "http://localhost:4000/genres";
+
   try {
-    return await axios.get("http://localhost:4000/genres");
+    return await axios.get(endpoint).then((res) => {
+      setGenreList(res.data);
+    });
   } catch (error) {
     console.error("Error:", error);
   }

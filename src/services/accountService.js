@@ -1,4 +1,10 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  getAuth,
+  deleteUser,
+  signOut,
+} from "firebase/auth";
 import axios from "axios";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
@@ -16,6 +22,9 @@ export const Register = async ({
   formData.lastName = lastName;
   formData.userName = userName;
   formData.postalAddress = postalAddress;
+  formData.email = email;
+
+  const endpoint = "http://localhost:4000/users";
   try {
     return createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
@@ -24,17 +33,30 @@ export const Register = async ({
           return updateProfile(currentUser, { displayName: userName })
             .then(async () => {
               try {
-                return await axios
-                  .post("http://localhost:4000/users", formData)
-                  .then((res) => {})
-                  .catch((error) => {
-                    console.error("Axios Error:", error);
+                return await axios.post(endpoint, formData).catch((error) => {
+                  console.error("Axios Error:", error);
+                  // === begin : remove firebase account
+                  const auth = getAuth();
+                  deleteUser(auth.currentUser).catch((error) => {
+                    console.error("Delete user Error:", error);
                   });
+                  // === end : remove firebase account
+                  signOut(auth); // sign out until email verified
+                  console.error("Add user record Error:", error);
+                });
               } catch (error) {
-                console.error("Error:", error);
+                signOut(auth); // sign out until email verified
+                console.error("Add user record Error:", error);
               }
             })
             .catch((error) => {
+              // === begin : remove firebase account
+              const auth = getAuth();
+              deleteUser(auth.currentUser).catch((error) => {
+                console.error("Delete user Error:", error);
+              });
+              // === end : remove firebase account
+              signOut(auth); // sign out until email verified
               console.error("updateProfile Error:", error);
             });
         } else {
@@ -64,13 +86,12 @@ export const GetUserDetails = async (userData, setUserDetails) => {
   formData.userName = userName;
 
   if (data?.providerData) {
+    const endpoint = "http://localhost:4000/users/search";
     try {
-      return await axios
-        .post("http://localhost:4000/users/search", formData)
-        .then((res) => {
-          setUserDetails(...res.data);
-          return res
-        });
+      return await axios.post(endpoint, formData).then((res) => {
+        setUserDetails(...res.data);
+        return res;
+      });
     } catch (error) {
       console.error("Error:", error);
     }
