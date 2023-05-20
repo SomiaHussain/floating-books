@@ -69,7 +69,7 @@ const LoginPage = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" fullWidth>
+          <Button data-testid="login" type="submit" fullWidth>
             Login
           </Button>
         </Grid>

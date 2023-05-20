@@ -88,8 +88,9 @@ const HomePage = () => {
   };
 
   return (
-    <div sx={{ paddingTop: "10px" }}>
+    <div>
       <Grid
+      sx={{paddingTop:"20px"}}
         container
         spacing={3}
         direction={"column"}

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, TextField } from "@mui/material";
+import { Container, TextField, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import "./addBook.css";
 import { GetUserDetails } from "../../services/accountService";
 import { AddBook } from "../../services/bookService";
+import { GetAllGenres } from "../../services/genreService";
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -22,14 +23,13 @@ const formatDate = (date) => {
 };
 
 const AddBookPage = () => {
-  const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState();
+  const [genres, setGenres] = useState();
 
   useEffect(() => {
-    const storedData = localStorage.getItem("userDetails");
-    setUserData(JSON.parse(storedData));
     GetUserDetails(localStorage.getItem("userDetails"), setUserDetails);
+    GetAllGenres().then((res) => setGenres(res?.data));
   }, []);
 
   const [bookData, setBookData] = useState({
@@ -37,9 +37,10 @@ const AddBookPage = () => {
     isbn: "",
     author: "",
     releaseDate: "",
+    genre: "",
     image: "",
     donatorComment: "",
-    donateDate: formatDate(new Date()),
+    donateDate: formatDate(new Date())
   });
 
   const handleChange = (e) => {
@@ -56,8 +57,8 @@ const AddBookPage = () => {
     const bookDetails = {
       ...bookData,
       ownerId: userDetails.id,
-      genreId: 7,
-      donatorId: userDetails.id,
+      genreId: bookData.genre,
+      donatorId: userDetails.id
     };
     AddBook(bookDetails)
       .then((res) => {
@@ -109,6 +110,7 @@ const AddBookPage = () => {
 
         <TextField
           label="Release Date"
+          InputLabelProps={{ shrink: true }}
           type="date"
           required={true}
           name="releaseDate"
@@ -120,6 +122,7 @@ const AddBookPage = () => {
 
         <TextField
           label="Image url"
+          InputLabelProps={{ shrink: true }}
           type="file"
           required={true}
           name="image"
@@ -127,6 +130,20 @@ const AddBookPage = () => {
           margin="normal"
           fullWidth
         />
+
+        <TextField
+          select
+          label="Select genre"
+          name="genre"
+          value={bookData.genre}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+        >
+          {genres?.map((item) => (
+            <MenuItem value={item.id}>{item.genre}</MenuItem>
+          ))}
+        </TextField>
 
         <TextField
           label="Donator Comment"

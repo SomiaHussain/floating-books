@@ -8,7 +8,6 @@ export class Confirm extends Component {
     e.preventDefault();
     Register(this.props.values).then((result) => {
       window.location.href = '/login';
-      console.log(result);
     });
   };
 

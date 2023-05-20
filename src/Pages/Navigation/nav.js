@@ -19,7 +19,7 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
-  let pages = ["Contact", "About us"];
+  let pages = ["contact", "About us"];
 
   if (!isUserLogged) {
     pages = [...pages, "login", "register"];

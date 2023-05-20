@@ -10,8 +10,7 @@ export const AddBook = async ({
   donatorId,
   donateDate,
   ownerId,
-  genreId,
-  favouritesId,
+  genreId
 }) => {
   const formData = new FormData();
   formData.append("title", title);
@@ -20,7 +19,7 @@ export const AddBook = async ({
   formData.append("releaseDate", releaseDate);
   formData.append("donatorcomment", donatorComment);
   formData.append("donateDate", donateDate);
-  formData.append("genreId", 7);
+  formData.append("genreId", genreId);
   formData.append("donatorId", donatorId);
   formData.append("ownerId", ownerId);
   if (image) {
@@ -63,9 +62,9 @@ export const AddFavouriteBook = async (bookId, userId, createDate) => {
 
 export const GetFavouriteBook = async (userId, setFavouriteBooks) => {
   try {
-    const result = await axios.get(
-      `http://localhost:4000/favourites/${userId}`
-    );
+    const result = await axios.post("http://localhost:4000/favourites/search", {
+      userId
+    });
     const uniqueBooksMap = new Map();
     result?.data.forEach((item) => {
       const data = { ...item.book, favouritesId: item.id };

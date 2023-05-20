@@ -139,7 +139,7 @@ export class FormUserDetails extends Component {
           <p className="errorMessage">{this.state.passwordMatch}</p>
         )}
         <br />
-        <Button color="primary" variant="contained" onClick={this.continue}>
+        <Button data-testId="page1-next-page" color="primary" variant="contained" onClick={this.continue}>
           Continue
         </Button>
       </>
