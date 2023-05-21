@@ -29,57 +29,55 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
             {book.title}
           </Typography>
           <div variant="body2" color="text.secondary">
-            <p>Author: {book.author}</p>
-            <p>Release Date: {book.releaseDate}</p>
-            <p>Donator Comment: {book.donatorcomment}</p>
-            <p>Donate Date: {book.donateDate}</p>
-            <p>Genre: {book.genre.genre}</p>
-            <p>Donator: {book.donator.userName}</p>
-            <p>Owner: {book.owner.userName}</p>
+            <p><b>Author:</b> {book.author}</p>
+            <p><b>Release Date:</b> {book.releaseDate}</p>
+            <p><b>Recommendation:</b> {book.donatorcomment}</p>
+            <p><b>Genre:</b> {book.genre.genre}</p>
+            <p><b>Owner:</b> {book.owner.userName}</p>
           </div>
         </CardContent>
-        {localStorage.getItem("userDetails") && 
-        <CardActions>
-          {isFavourite(book) ? (
-            <Box sx={{ paddingLeft: "5em" }}>
-              <Button
-                size="small"
-                variant="outlined"
-                type="submit"
-                className="button-order"
-                onClick={() => {
-                  handleOrder(book, book.favouritesId);
+        {localStorage.getItem("userDetails") && (
+          <CardActions>
+            {isFavourite(book) ? (
+              <Box sx={{ paddingLeft: "5em" }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  type="submit"
+                  className="button-order"
+                  onClick={() => {
+                    handleOrder(book, book.favouritesId);
+                  }}
+                >
+                  Order
+                </Button>
+                <IconButton
+                  onClick={(e) => {
+                    e.target.value = "";
+                    handleFavourite(book, book.favouritesId);
+                  }}
+                >
+                  <FavoriteIcon sx={{ color: "green" }} />
+                </IconButton>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  paddingLeft: "7em"
                 }}
               >
-                Order
-              </Button>
-              <IconButton
-                onClick={(e) => {
-                  e.target.value = "";
-                  handleFavourite(book, book.favouritesId);
-                }}
-              >
-                <FavoriteIcon sx={{ color: "green" }} />
-              </IconButton>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                paddingLeft: "7em"
-              }}
-            >
-              <IconButton
-                onClick={(e) => {
-                  e.target.value = "";
-                  handleFavourite(book, book.favouritesId);
-                }}
-              >
-                <FavoriteBorderIcon />
-              </IconButton>
-            </Box>
-          )}
-        </CardActions>
-        }
+                <IconButton
+                  onClick={(e) => {
+                    e.target.value = "";
+                    handleFavourite(book, book.favouritesId);
+                  }}
+                >
+                  <FavoriteBorderIcon />
+                </IconButton>
+              </Box>
+            )}
+          </CardActions>
+        )}
       </Card>
     </Grid>
   );
