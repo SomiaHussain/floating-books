@@ -17,7 +17,13 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
   return (
     <Grid key={book.ISBN} item xs={12} md={2}>
       <Card className="bookDetails" sx={{ maxWidth: 345 }}>
-        <CardMedia sx={{ height: 140 }} image={bookImage || 'https://images.pexels.com/photos/1730560/pexels-photo-1730560.jpeg'} />
+        <CardMedia
+          sx={{ height: 140 }}
+          image={
+            bookImage ||
+            "https://images.pexels.com/photos/1730560/pexels-photo-1730560.jpeg"
+          }
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {book.title}
@@ -34,7 +40,7 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
         </CardContent>
         <CardActions>
           {isFavourite(book) ? (
-            <Box sx={{ paddingLeft: "90px" }}>
+            <Box sx={{ paddingLeft: "5em" }}>
               <Button
                 size="small"
                 variant="outlined"
@@ -56,7 +62,11 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ paddingLeft: "90px" }}>
+            <Box
+              sx={{
+                paddingLeft: "7em"
+              }}
+            >
               <IconButton
                 onClick={(e) => {
                   e.target.value = "";
