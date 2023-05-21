@@ -10,8 +10,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
+import logoImage from "../../common/assets/logo.png";
 import "./nav.css";
 
 const NavBar = () => {
@@ -72,10 +72,9 @@ const NavBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar sx={{ backgroundColor: "#b4cdc7" }} position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -88,7 +87,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none",
+              textDecoration: "none"
             }}
           >
             Floating books
@@ -108,25 +107,25 @@ const NavBar = () => {
             <Menu
               PaperProps={{
                 style: {
-                  width: 230,
-                },
+                  width: 230
+                }
               }}
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "left",
+                horizontal: "left"
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "left",
+                horizontal: "left"
               }}
               open={Boolean(anchorElNav)}
               onClose={navigateCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
-                top: "50px",
+                top: "50px"
               }}
             >
               {pages.map((page) => (
@@ -135,7 +134,7 @@ const NavBar = () => {
                     borderTop: 1,
                     borderRadius: "16px",
                     marginBottom: "10px",
-                    borderColor: "primary.main",
+                    borderColor: "primary.main"
                   }}
                   key={page}
                   onClick={() => navigateCloseNavMenu(page)}
@@ -145,7 +144,17 @@ const NavBar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Box
+            component="img"
+            sx={{
+              height: 60,
+              width: 60,
+              maxHeight: { xs: 233, md: 167 },
+              maxWidth: { xs: 350, md: 250 }
+            }}
+            alt="The house from the offer."
+            src={logoImage}
+          />
           <Typography
             variant="h5"
             noWrap
@@ -159,7 +168,7 @@ const NavBar = () => {
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              textDecoration: "none",
+              textDecoration: "none"
             }}
           >
             Floating books
@@ -185,20 +194,20 @@ const NavBar = () => {
               <Menu
                 PaperProps={{
                   style: {
-                    width: 230,
-                  },
+                    width: 230
+                  }
                 }}
                 sx={{ mt: "35px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: "top",
-                  horizontal: "right",
+                  horizontal: "right"
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: "top",
-                  horizontal: "right",
+                  horizontal: "right"
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
@@ -212,7 +221,7 @@ const NavBar = () => {
                       borderTop: 1,
                       borderRadius: "16px",
                       marginBottom: "10px",
-                      borderColor: "secondary.main",
+                      borderColor: "secondary.main"
                     }}
                     key={setting}
                     onClick={() => handleCloseUserMenu(setting)}
