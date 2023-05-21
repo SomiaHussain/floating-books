@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../../common/assets/logo.png";
+import Dropdown from "../../components/dropDown";
+import { GetGenres } from "../../services/genreService";
 import "./nav.css";
 
 const NavBar = () => {
@@ -19,7 +21,12 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const [genres, setAllGenres] = useState(null);
   let pages = ["Contact", "aboutUs"];
+
+  useEffect(() => {
+    GetGenres(setAllGenres);
+  }, []);
 
   if (!isUserLogged) {
     pages = [...pages, "Login", "Register"];
@@ -29,6 +36,33 @@ const NavBar = () => {
     pages = [...pages, "add-book"];
   }
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+  const getGenreId = (name) => {
+    return (
+      genres?.find((item) => item.genre.toLowerCase() === name.toLowerCase())
+        ?.id || 0
+    );
+  };
+
+  const fictionOptions = [
+    { genre: "Romance", id: getGenreId("Romance") },
+    { genre: "Thriller", id: getGenreId("Thriller") },
+    { genre: "Science Fiction", id: getGenreId("Science") },
+    { genre: "Adventure", id: getGenreId("Adventure") },
+    { genre: "Horror", id: getGenreId("Horror") },
+    { genre: "Other", id: getGenreId("other") }
+  ];
+
+  
+  const nonfictionOptions = [
+    { genre: "Arts", id: getGenreId("Arts") },
+    { genre: "History", id: getGenreId("History") },
+    { genre: "Maths", id: getGenreId("Maths") },
+    { genre: "Computing", id: getGenreId("Computing") },
+    { genre: "Geography", id: getGenreId("Geography") },
+    { genre: "Science", id: getGenreId("Science") },
+    { genre: "Other", id: getGenreId("Other") }
+  ]; 
 
   const navigate = useNavigate();
 
@@ -51,11 +85,14 @@ const NavBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const navigateCloseNavMenu = (page) => {
+  const navigatePage=(page)=>{
     if (page) {
       navigate("/" + page);
     }
+    setAnchorElNav(null);
+  }
 
+  const navigateCloseNavMenu = (page) => {
     setAnchorElNav(null);
   };
 
@@ -72,7 +109,7 @@ const NavBar = () => {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: "#b4cdc7" }} position="static">
+    <AppBar sx={{ backgroundColor: "#2596be" }} position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -137,11 +174,20 @@ const NavBar = () => {
                     borderColor: "primary.main"
                   }}
                   key={page}
-                  onClick={() => navigateCloseNavMenu(page)}
+                  onClick={() => navigatePage(page)}
                 >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              <Box sx={{ textAlign: "center" }}>
+                <h5>Fiction</h5>
+                <Dropdown options={fictionOptions} />
+              </Box>
+
+              <Box sx={{ textAlign: "center" }}>
+                <h5>Non-Fiction</h5>
+                <Dropdown options={nonfictionOptions} />
+              </Box>
             </Menu>
           </Box>
           <Box
@@ -156,7 +202,7 @@ const NavBar = () => {
             src={logoImage}
           />
           <Typography
-            variant="h5"
+            variant="h7"
             noWrap
             component="a"
             href="/"
@@ -177,7 +223,7 @@ const NavBar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => navigateCloseNavMenu(page)}
+                onClick={() => navigatePage(page)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

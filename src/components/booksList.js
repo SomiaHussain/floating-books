@@ -38,6 +38,7 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
             <p>Owner: {book.owner.userName}</p>
           </div>
         </CardContent>
+        {localStorage.getItem("userDetails") && 
         <CardActions>
           {isFavourite(book) ? (
             <Box sx={{ paddingLeft: "5em" }}>
@@ -78,6 +79,7 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
             </Box>
           )}
         </CardActions>
+        }
       </Card>
     </Grid>
   );

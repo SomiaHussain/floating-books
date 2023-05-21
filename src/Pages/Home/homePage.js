@@ -195,7 +195,7 @@ const HomePage = () => {
                 >
                   <CloseRoundedIcon />
                 </IconButton>
-              ),
+              )
             }}
           />
         </Grid>

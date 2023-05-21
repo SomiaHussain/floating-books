@@ -10,7 +10,7 @@ export const AddBook = async ({
   donatorId,
   donateDate,
   ownerId,
-  genreId,
+  genreId
 }) => {
   const formData = new FormData();
   formData.append("title", title);
@@ -39,13 +39,21 @@ export const AddBook = async ({
 
 export const GetRecentlyAddedBooks = async (setBooksData, setFilteredData) => {
   const endpoint = "http://localhost:4000/books";
-
   try {
     const result = await axios.get(endpoint);
     const bookData = result.data;
     bookData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     setBooksData(bookData);
     setFilteredData(bookData);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+export const GetAllBooks = async () => {
+  const endpoint = "http://localhost:4000/books";
+  try {
+    return await axios.get(endpoint);
   } catch (error) {
     console.error("Error:", error);
   }

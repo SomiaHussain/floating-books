@@ -9,6 +9,7 @@ import AddBookPage from "../Pages/Book/addBookPage";
 import ContactUsPage from "../Pages/ContactUs/contactUsPage";
 import AboutUsPage from "../Pages/AboutUs/aboutUsPage";
 import DashboardPage from "../Pages/Book/dashboardPage";
+import AllBooks from "../Pages/Book/allbooks";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/contact" element={<ContactUsPage />} />
           <Route path="/aboutUs" element={<AboutUsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/all-books/:id/:genre" element={<AllBooks />} />
         </Routes>
       </Router>
       <FooterSection />
