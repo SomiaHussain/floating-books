@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container, TextField } from "@mui/material";
+import { Container, TextField, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Button, Select, MenuItem, InputLabel } from "@mui/material";
+import { Button } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import "./addBook.css";
 import { GetUserDetails } from "../../services/accountService";
@@ -23,31 +23,25 @@ const formatDate = (date) => {
 };
 
 const AddBookPage = () => {
-  const [genreList, setGenreList] = useState([]);
-  const [userData, setUserData] = useState({});
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState();
+  const [genres, setGenres] = useState();
 
   useEffect(() => {
-    const storedData = localStorage.getItem("userDetails");
-    setUserData(JSON.parse(storedData));
     GetUserDetails(localStorage.getItem("userDetails"), setUserDetails);
+    GetGenres(setGenres);
   }, []);
 
   const [bookData, setBookData] = useState({
     title: "",
     isbn: "",
     author: "",
-    selectGenre: "",
     releaseDate: "",
+    genre: "",
     image: "",
     donatorComment: "",
-    donateDate: formatDate(new Date()),
+    donateDate: formatDate(new Date())
   });
-
-  useEffect(() => {
-    GetGenres(setGenreList);
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,17 +54,12 @@ const AddBookPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const genreId = genreList.filter((a) => a.genre === bookData.selectGenre)[0]
-      .id;
-
     const bookDetails = {
       ...bookData,
-      genreId: genreId,
       ownerId: userDetails.id,
-      donatorId: userDetails.id,
+      genreId: bookData.genre,
+      donatorId: userDetails.id
     };
-
     AddBook(bookDetails)
       .then((res) => {
         if (res.status === 201) {
@@ -119,23 +108,9 @@ const AddBookPage = () => {
           fullWidth
         />
 
-        <InputLabel id="selectGenreLabel">Genre:</InputLabel>
-        <Select
-          required={true}
-          id="selectGenre"
-          name="selectGenre"
-          value={bookData.selectGenre}
-          onChange={handleChange}
-        >
-          {genreList.map((g) => (
-            <MenuItem key={g.genre} value={g.genre}>
-              {g.genre}
-            </MenuItem>
-          ))}
-        </Select>
-
         <TextField
           label="Release Date"
+          InputLabelProps={{ shrink: true }}
           type="date"
           required={true}
           name="releaseDate"
@@ -147,6 +122,7 @@ const AddBookPage = () => {
 
         <TextField
           label="Image url"
+          InputLabelProps={{ shrink: true }}
           type="file"
           required={true}
           name="image"
@@ -154,6 +130,21 @@ const AddBookPage = () => {
           margin="normal"
           fullWidth
         />
+
+        <TextField
+          select
+          label="Select genre"
+          name="genre"
+          required={true}
+          value={bookData.genre}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+        >
+          {genres?.map((item) => (
+            <MenuItem value={item.id}>{item.genre}</MenuItem>
+          ))}
+        </TextField>
 
         <TextField
           label="Donator Comment"
@@ -164,7 +155,7 @@ const AddBookPage = () => {
           onChange={handleChange}
           multiline
           rows={5}
-          // maxRows={4}
+          maxRows={4}
           margin="normal"
           fullWidth
         />
