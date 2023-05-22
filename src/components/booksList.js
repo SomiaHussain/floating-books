@@ -17,60 +17,67 @@ const BookList = ({ book, handleFavourite, isFavourite, handleOrder }) => {
   return (
     <Grid key={book.ISBN} item xs={12} md={2}>
       <Card className="bookDetails" sx={{ maxWidth: 345 }}>
-        <CardMedia sx={{ height: 140 }} image={bookImage} />
-
+        <CardMedia
+          sx={{ height: 140 }}
+          image={
+            bookImage ||
+            "https://images.pexels.com/photos/1730560/pexels-photo-1730560.jpeg"
+          }
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {book.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <p>Author: {book.author}</p>
-            <p>Release Date: {book.releaseDate}</p>
-            <p>Donator Comment: {book.donatorcomment}</p>
-            <p>Donate Date: {book.donateDate}</p>
-            <p>Genre: {book.genre.genre}</p>
-            <p>Donator: {book.donator.userName}</p>
-            <p>Owner: {book.owner.userName}</p>
-          </Typography>
+          <div variant="body2" color="text.secondary">
+            <p><b>Author:</b> {book.author}</p>
+            <p><b>Release Date:</b> {book.releaseDate}</p>
+            <p><b>Recommendation:</b> {book.donatorcomment}</p>
+            <p><b>Genre:</b> {book.genre.genre}</p>
+            <p><b>Owner:</b> {book.owner.userName}</p>
+          </div>
         </CardContent>
-        <CardActions>
-          {/* <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button> */}
-          {isFavourite(book) ? (
-            <Box sx={{ paddingLeft: "90px" }}>
-              <Button
-                size="small"
-                variant="outlined"
-                type="submit"
-                className="button-order"
-                onClick={() => {
-                  handleOrder(book, book.favouritesId);
+        {localStorage.getItem("userDetails") && (
+          <CardActions>
+            {isFavourite(book) ? (
+              <Box sx={{ paddingLeft: "5em" }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  type="submit"
+                  className="button-order"
+                  onClick={() => {
+                    handleOrder(book, book.favouritesId);
+                  }}
+                >
+                  Order
+                </Button>
+                <IconButton
+                  onClick={(e) => {
+                    e.target.value = "";
+                    handleFavourite(book, book.favouritesId);
+                  }}
+                >
+                  <FavoriteIcon sx={{ color: "green" }} />
+                </IconButton>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  paddingLeft: "7em"
                 }}
               >
-                Order
-              </Button>
-              <IconButton
-                onClick={(e) => {
-                  e.target.value = "";
-                  handleFavourite(book, book.favouritesId);
-                }}
-              >
-                <FavoriteIcon sx={{ color: "green" }} />
-              </IconButton>
-            </Box>
-          ) : (
-            <Box sx={{ paddingLeft: "90px" }}>
-              <IconButton
-                onClick={(e) => {
-                  e.target.value = "";
-                  handleFavourite(book, book.favouritesId);
-                }}
-              >
-                <FavoriteBorderIcon />
-              </IconButton>
-            </Box>
-          )}
-        </CardActions>
+                <IconButton
+                  onClick={(e) => {
+                    e.target.value = "";
+                    handleFavourite(book, book.favouritesId);
+                  }}
+                >
+                  <FavoriteBorderIcon />
+                </IconButton>
+              </Box>
+            )}
+          </CardActions>
+        )}
       </Card>
     </Grid>
   );

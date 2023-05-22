@@ -1,12 +1,13 @@
 import * as React from "react";
 import "./footer.css";
+import { Box } from "@mui/material";
 const FooterSection = () => {
   return (
-    <div className="footer">
+    <Box className="footer">
       <p>
         &copy; {new Date().getFullYear()} Floating Books. All rights reserved.
       </p>
-    </div>
+    </Box>
   );
 };
 
