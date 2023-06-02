@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# Floating Books App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Brief
 
-## Available Scripts
+This is frontend application for backend Floating-Books-Api.
 
-In the project directory, you can run:
+User can register in this app and donate books.
 
-### `npm start`
+Another user can register in this app, search book, add to favourites, then order books.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Book owner can accept or reject any book order.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+If book owner accept book order, app will track with status and send email notification.
 
-### `npm test`
+## Screenshots of app
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- screenshots user registration
 
-### `npm run build`
+  <img src="screenshots\start-screen.jpeg" height="200">
+  <img src="screenshots\0101-add-user-1.jpeg" height="200">
+  <img src="screenshots\0102-add-user-2.jpeg" height="200">
+  <img src="screenshots\0103-add-user-3.jpeg" height="200">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- screenshots user must verify email and then login
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  <img src="screenshots\0201-first-time-login.jpeg" height="200">
+  <img src="screenshots\0202-email-to-verify.jpeg" height="200">
+  <img src="screenshots\0203-login-success-home-page.jpeg" height="200">
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- screenshots home page menu
 
-### `npm run eject`
+  <img src="screenshots\0301-left-menu.jpeg" height="200">
+  <img src="screenshots\0302-right-menu.jpeg" height="200">
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- screenshots user donates book
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  <img src="screenshots\0401-add-book-page.jpeg" height="200">
+  <img src="screenshots\0402-after-add-book-1.jpeg" height="200">
+  <img src="screenshots\0403-after-add-book-2.jpeg" height="200">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- screenshots another user login, search book, order book
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  <img src="screenshots\0501-another-user-login.jpeg" height="200">
+  <img src="screenshots\0502-search-book.jpeg" height="200">
+  <img src="screenshots\0503-order-book.jpeg" height="200">
+  <img src="screenshots\0504-requestor-dashboard.jpeg" height="200">
 
-## Learn More
+- screenshots owner received email notification, then accept, then receive requester's address
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  <img src="screenshots\0601-owner-receive-email.jpeg" height="200">
+  <img src="screenshots\0602-owner-dashboard.jpeg" height="200">
+  <img src="screenshots\0604-owner-receive-requester-address.jpeg" height="200">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- requester received email notification, order is accepted
 
-### Code Splitting
+  <img src="screenshots\0605-requester-be-informed.jpeg" height="200">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- screenshots owner delivered book and update status
 
-### Analyzing the Bundle Size
+  <img src="screenshots\0606-owner-confirm-delivered-1.jpeg" height="200">
+  <img src="screenshots\0607-owner-confirm-delivered-2.jpeg" height="200">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- requester received email notification, book is delivered
 
-### Making a Progressive Web App
+  <img src="screenshots\0703-email-inform-requester.jpeg" height="200">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- screenshots requester received book and update status
 
-### Advanced Configuration
+  <img src="screenshots\0701-requester-confirm-receive-1.jpeg" height="200">
+  <img src="screenshots\0702-requester-dashboard-history.jpeg" height="200">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- screenshots dashboard of owner no more follow up task and book owner is updated
 
-### Deployment
+  <img src="screenshots\0704-owner-dashboard-empty.jpeg" height="200">
+  <img src="screenshots\0801-current-book-owner-updated.jpeg" height="200">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Testing utilities used (Jest, React Testing Library)
 
-### `npm run build` fails to minify
+| Utilities     | From                     | Usage                                                                   |
+| ------------- | ------------------------ | ----------------------------------------------------------------------- |
+| renderer      | "react-test-renderer"    | to generate component snapshots to catch unanticipated changes          |
+| render        | "@testing-library/react" | to create the virtual test environment                                  |
+| fireEvent     | "@testing-library/react" | to simulate event trigger on component                                  |
+| BrowserRouter | "react-router-dom"       | to store current location in the browser's address bar using clean URLs |
+| MemoryRouter  | "react-router-dom"       | to store locations internally in an array                               |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Technologies
+
+- [React](https://react.dev/learn): create a React app project template
+- [MUI](https://mui.com/): offers a comprehensive suite of UI tools to help you ship new features faster
+- [useLocation,useNavigate](https://reactrouter.com/en/v6.3.0/api): React router function
+- [Axios API](https://axios-http.com/docs/intro): promise-based HTTP Client for node.js and the browser
+- [Firebase authentication](https://firebase.google.com/docs/auth): a drop-in auth solution that handles the UI flows for signing in users with email addresses and passwords
+
+## Instructions
+
+- Clone frontend repo floating-books:
+
+  ```
+  git clone https://github.com/SomiaHussain/floating-books.git
+  ```
+
+- Move into the directory and install:
+
+  ```
+  cd floating-books
+  npm install
+  ```
+
+- To start and run on port 3000:
+
+  ```
+  npm start
+  ```
+
+- To run the tests:
+
+  ```
+  npm test
+  ```
+
+## Problem and solution
+
+- React-Testing library not rendering Material-UI Dialog in snapshot
+- getting error warning in MUI TextField component with select
+
+## Author
+
+[Somia Hussain](https://www.linkedin.com/in/somia-hussain-b3498426a/)
+
+[David Cheung](https://www.linkedin.com/in/david-cheung-473597199/)
